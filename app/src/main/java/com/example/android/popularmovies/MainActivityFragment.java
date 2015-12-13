@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -18,6 +19,7 @@ import android.widget.ListAdapter;
 import com.squareup.picasso.*;
 
 import org.json.JSONException;
+import org.json.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,13 +27,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
     ImageView mAdapter;
+    MovieThumbnailAdapter thumbs;
+    ArrayList<HashMap<String,String>> movieList;
     public MainActivityFragment() {
+
     }
 
     @Override
@@ -45,15 +52,44 @@ public class MainActivityFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
         GridView grid = (GridView) root.findViewById(R.id.GridView);
-        grid.setAdapter(new ImageAdapter(getActivity().getBaseContext()));
+        movieList = new ArrayList<HashMap<String,String>>();
 
-        //new FetchMovies().execute(Sort.POPULAR);
+        thumbs = new MovieThumbnailAdapter(getActivity().getBaseContext(), movieList);
+        grid.setAdapter(thumbs);
+        //grid.setAdapter(new ImageAdapter(getActivity().getBaseContext()));
+
+        refresh(Sort.POPULAR);
 
         return root;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch(id){
+            case R.id.action_popular:
+                refresh(Sort.POPULAR);
+            //break;
+            case R.id.action_ratings:
+                refresh(Sort.RATINGS);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void refresh(Sort s){
+        movieList.clear();
+        new FetchMovies().execute(s);
+    }
+
     public enum Sort {
-        POPULAR
+        POPULAR,
+        RATINGS
     }
 
     public class FetchMovies extends AsyncTask<Sort, Void, Void>{
@@ -66,12 +102,18 @@ public class MainActivityFragment extends Fragment {
             BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
-            String jsonResults = null;
+            JSONObject jsonResults = null;
             String search;
+
+            final String MOVIE_POSTER_THUMB_URL = "http://image.tmdb.org/t/p/";
+            final String MOVIE_POSTER_THUMB_SIZE = "w185";
+
             switch (t[0]){
                 case POPULAR:
                     search = "popularity.desc";
                     break;
+                case RATINGS:
+                    search = "vote_average.desc";
                 default:
                     search = "popularity.desc";
             }
@@ -85,6 +127,7 @@ public class MainActivityFragment extends Fragment {
                 final String API_PARAM = "api_key";
                 final String API_KEY = "";
                 final String SORT_PARAM = "sort_by";
+
 
                 Uri uri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .appendQueryParameter(API_PARAM, API_KEY)
@@ -120,12 +163,14 @@ public class MainActivityFragment extends Fragment {
                     // Stream was empty.  No point in parsing.
                     return null;
                 }
-                jsonResults = buffer.toString();
+                jsonResults = new JSONObject(buffer.toString());
             } catch (IOException e) {
                 Log.e(Log_Tag, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
                 // to parse it.
                 return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
             } finally{
                 if (urlConnection != null) {
                     urlConnection.disconnect();
@@ -138,7 +183,19 @@ public class MainActivityFragment extends Fragment {
                     }
                 }
             }
-            Log.v(Log_Tag, "---- "+jsonResults);
+            Log.v(Log_Tag, "---- " + jsonResults.toString());
+
+            try {
+                JSONArray results = jsonResults.getJSONArray("results");
+                for(int r = 0; r < results.length(); r++){
+                    HashMap<String, String> c = new HashMap<String, String>();
+                    c.put("title", results.getJSONObject(r).getString("original_title"));
+                    c.put("src", MOVIE_POSTER_THUMB_URL + MOVIE_POSTER_THUMB_SIZE + results.getJSONObject(r).getString("poster_path"));
+                    movieList.add(c);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             /*
             try {
                 String[] data = getWeatherDataFromJson(forecastJsonStr, numDays);
@@ -171,6 +228,7 @@ public class MainActivityFragment extends Fragment {
         }
 
         // create a new ImageView for each item referenced by the Adapter
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView view = (ImageView) convertView;
             if(view == null){
