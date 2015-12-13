@@ -26,7 +26,7 @@ public class MovieThumbnailAdapter extends BaseAdapter{
     "title" => title
     "src" => image source
      */
-    private ArrayList<HashMap<String,String>> list;
+    public ArrayList<HashMap<String,String>> list;
 
     public MovieThumbnailAdapter(Context c, ArrayList<HashMap<String,String>> l) {
         context = c;
