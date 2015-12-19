@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:maxWidth="250dp"
+        android:id="@+id/poster"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="15dp"
+            android:id="@+id/details_title" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="15dp"
+            android:id="@+id/details_release" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="15dp"
+            android:id="@+id/details_vote" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="15dp"
+            android:id="@+id/details_plot" />
+
+</LinearLayout>

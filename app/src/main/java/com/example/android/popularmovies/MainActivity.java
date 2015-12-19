@@ -1,11 +1,16 @@
 package com.example.android.popularmovies;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +38,16 @@ public class MainActivity extends AppCompatActivity {
 
         grid = (GridView) findViewById(R.id.GridView);
         grid.setAdapter(thumbs);
+        final MainActivity self = this;
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(self, DetailsActivity.class);
+                MainActivity.current = thumbs.list.get(position);
+                startActivity(intent);
+            }
+        });
 
         refresh();
 
@@ -58,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
         collection.execute(MoviesCollection.Sort.POPULAR);
 
+    }
+
+    public static HashMap<String, String> current;
+
+    public void setCurrent(int spot){
+        MainActivity.current = thumbs.list.get(spot);
     }
 
     public class Fetch extends MoviesCollection{

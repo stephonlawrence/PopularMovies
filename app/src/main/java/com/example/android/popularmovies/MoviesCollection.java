@@ -26,6 +26,7 @@ public class MoviesCollection extends AsyncTask <MoviesCollection.Sort, Void, Ar
         RATINGS
     }
 
+
     private String Log_Tag = MoviesCollection.class.getSimpleName();
     public ArrayList<HashMap<String,String>> movies;
 
@@ -128,6 +129,10 @@ public class MoviesCollection extends AsyncTask <MoviesCollection.Sort, Void, Ar
                 c.put("title", results.getJSONObject(r).getString("original_title"));
                 c.put("src", MOVIE_POSTER_THUMB_URL + MOVIE_POSTER_THUMB_SIZE + results.getJSONObject(r).getString("poster_path"));
                 //Log.v(Log_Tag, "---- " + c.get("title") +": " + c.get("src"));
+                c.put("releaseDate", results.getJSONObject(r).getString("release_date"));
+                c.put("voteAverage", results.getJSONObject(r).getString("vote_average"));
+                c.put("plot", results.getJSONObject(r).getString("overview"));
+                //title, release date, movie poster, vote average, and plot synopsis
                 movies.add(c);
             }
         } catch (JSONException e) {
