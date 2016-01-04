@@ -51,6 +51,7 @@ public class MoviesCollection extends AsyncTask <MoviesCollection.Sort, Void, Ar
                 break;
             case RATINGS:
                 search = "vote_average.desc";
+                break;
             default:
                 search = "popularity.desc";
         }

@@ -9,20 +9,20 @@
         android:id="@+id/poster"/>
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:id="@+id/details_title" />
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:id="@+id/details_release" />
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:id="@+id/details_vote" />
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="15dp"
+            android:layout_height="wrap_content"
             android:id="@+id/details_plot" />
 
 </LinearLayout>

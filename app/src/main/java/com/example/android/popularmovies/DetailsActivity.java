@@ -35,8 +35,8 @@ public class DetailsActivity extends AppCompatActivity {
         p.load(MainActivity.current.get("src")).into(poster);
 
         text[0].setText(MainActivity.current.get("title"));
-        text[1].setText(MainActivity.current.get("releaseDate"));
-        text[2].setText(MainActivity.current.get("voteAverage"));
+        text[1].setText("Release Date: "+MainActivity.current.get("releaseDate"));
+        text[2].setText("Vote Average: "+MainActivity.current.get("voteAverage"));
         text[3].setText(MainActivity.current.get("plot"));
 
     }

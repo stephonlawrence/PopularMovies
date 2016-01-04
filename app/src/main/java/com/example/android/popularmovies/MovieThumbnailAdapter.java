@@ -58,21 +58,22 @@ public class MovieThumbnailAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup Parent){
-        View out = layFlater.inflate(R.layout.movie_item_list_view, null, false);
+        View out;
+        HashMap<String, String> data = getItem(position);
         if(convertView == null) {
-            TextView title = (TextView) out.findViewById(R.id.movieItemTitle);
-            ImageView image = (ImageView) out.findViewById(R.id.movieItemImage);
-            HashMap<String, String> data = getItem(position);
-            if (data.get("title") != null) {
-                title.setText(data.get("title"));
-            } else {
-                title.setText("Untitled - Entry");
-            }
-            if (data.get("src") != null) {
-                pLoader.load(data.get("src")).into(image);
-            }
+            out = layFlater.inflate(R.layout.movie_item_list_view, null, false);
         }else{
-            out = (View) convertView;
+            out = convertView;
+        }
+        TextView title = (TextView) out.findViewById(R.id.movieItemTitle);
+        ImageView image = (ImageView) out.findViewById(R.id.movieItemImage);
+        if (data.get("title") != null) {
+            title.setText(data.get("title"));
+        } else {
+            title.setText("Untitled - Entry");
+        }
+        if (data.get("src") != null) {
+            pLoader.load(data.get("src")).into(image);
         }
         return out;
     }
