@@ -32,12 +32,12 @@ public class DetailsActivity extends AppCompatActivity {
         text[2] = (TextView) findViewById(R.id.details_vote);
         text[3] = (TextView) findViewById(R.id.details_plot);
 
-        p.load(MainActivity.current.get("src")).into(poster);
+        p.load(MainActivity.current.getPoster_path()).into(poster);
 
-        text[0].setText(MainActivity.current.get("title"));
-        text[1].setText("Release Date: "+MainActivity.current.get("releaseDate"));
-        text[2].setText("Vote Average: "+MainActivity.current.get("voteAverage"));
-        text[3].setText(MainActivity.current.get("plot"));
+        text[0].setText(MainActivity.current.getOriginal_title());
+        text[1].setText("Release Date: "+MainActivity.current.getRelease_date());
+        text[2].setText("Vote Average: "+MainActivity.current.getVote_average());
+        text[3].setText(MainActivity.current.getOverview());
 
     }
 }

@@ -1,13 +1,16 @@
 package com.example.android.popularmovies;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by stephon on 2/29/16.
  */
 public class MovieData {
     private int page;
-    private List<movie> results;
+    private ArrayList<movie> results;
+
+    private static final String MOVIE_POSTER_THUMB_URL = "http://image.tmdb.org/t/p/";
+    private static final String MOVIE_POSTER_THUMB_SIZE = "w185";
 
     public MovieData(){}
 
@@ -15,7 +18,7 @@ public class MovieData {
         this.page = page;
     }
 
-    public List<movie> getResults(){
+    public ArrayList<movie> getResults(){
         return results;
     }
 
@@ -67,7 +70,7 @@ public class MovieData {
         }
 
         public String getPoster_path(){
-            return this.poster_path;
+            return MOVIE_POSTER_THUMB_URL + MOVIE_POSTER_THUMB_SIZE + this.poster_path;
         }
 
         public void setRelease_date(String release_date){

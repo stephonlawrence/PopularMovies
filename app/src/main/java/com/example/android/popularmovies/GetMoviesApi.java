@@ -1,8 +1,5 @@
 package com.example.android.popularmovies;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Query;

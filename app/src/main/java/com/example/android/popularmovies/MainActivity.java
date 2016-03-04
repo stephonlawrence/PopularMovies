@@ -10,37 +10,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
-    //public ArrayList<HashMap<String,String>> movieList;
     GetMoviesAdapter mAdapter = new GetMoviesAdapter();
     MovieThumbnailAdapter thumbs;
     GridView grid;
-    //Fetch collection;
+    public static MovieData.movie current;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //movieList = new ArrayList<HashMap<String,String>>();
-        thumbs = new MovieThumbnailAdapter(MainActivity.this, new ArrayList<HashMap<String,String>>());
-
-        /*
-        HashMap<String, String> c = new HashMap<String, String>();
-        c.put("title","First");
-        c.put("src", "http://i.imgur.com/BibbYdcl.jpg");
-        movieList.add(c);
-        */
+        thumbs = new MovieThumbnailAdapter(MainActivity.this, new ArrayList<MovieData.movie>());
 
         grid = (GridView) findViewById(R.id.GridView);
         grid.setAdapter(thumbs);
@@ -63,23 +50,9 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }*/
     }
-    /*
-    public void refresh(MoviesCollection.Sort s){
-        movieList.clear();
-        thumbs.notifyDataSetChanged();
-        collection = new Fetch();
 
-        collection.execute(s);
 
-    }
-    public void refresh(){
-        movieList.clear();
-        thumbs.notifyDataSetChanged();
-        collection = new Fetch();
-
-        collection.execute(MoviesCollection.Sort.POPULAR);
-
-    }*/
+    /* ***** Get Movie Data ***** */
     public void refresh(){
         // should be changed to refresh current sort order and not the default
         mAdapter.getMovies(GetMoviesApi.SortOrder.POPULAR, movieDataCallback);
@@ -88,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.getMovies(order, movieDataCallback);
     }
 
-    public static HashMap<String, String> current;
+
 
     private Callback<MovieData> movieDataCallback= new Callback<MovieData>(){
 
@@ -96,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         public void success(MovieData data, Response resp){
             //should probably be in a separate method because the list can be changed locally too.
             thumbs.list.clear();
-            thumbs.list.addAll(GetMoviesAdapter.sortData(data));
+            thumbs.list.addAll(data.getResults());
             thumbs.notifyDataSetChanged();
             Log.v("MAIN -------- Success", "added all data to thumbs list.");
         }
@@ -108,17 +81,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void setCurrent(int spot){
-        MainActivity.current = thumbs.list.get(spot);
-    }
+    /* ****************************************** ********************************** */
 
-    /*public class Fetch extends MoviesCollection{
-        protected void onPostExecute(ArrayList<HashMap<String,String>> l){
-            thumbs.list.addAll(l);
-            thumbs.notifyDataSetChanged();
-        }
-    }*/
 
+    /* ***** Menu Controls ***** */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -147,4 +113,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    /* ******************** ************* */
 }

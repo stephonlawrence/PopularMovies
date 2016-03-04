@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by stephon on 10/30/15.
@@ -26,9 +25,9 @@ public class MovieThumbnailAdapter extends BaseAdapter{
     "title" => title
     "src" => image source
      */
-    public ArrayList<HashMap<String,String>> list;
+    public ArrayList<MovieData.movie> list;
 
-    public MovieThumbnailAdapter(Context c, ArrayList<HashMap<String,String>> l) {
+    public MovieThumbnailAdapter(Context c, ArrayList<MovieData.movie> l) {
         context = c;
         pLoader = Picasso.with(c);
         layFlater = LayoutInflater.from(c);
@@ -38,7 +37,7 @@ public class MovieThumbnailAdapter extends BaseAdapter{
         context = c;
         pLoader = Picasso.with(c);
         layFlater = LayoutInflater.from(c);
-        list = new ArrayList<HashMap<String, String>>();
+        list = new ArrayList<>();
     }
 
     @Override
@@ -47,7 +46,7 @@ public class MovieThumbnailAdapter extends BaseAdapter{
     }
 
     @Override
-    public HashMap<String, String> getItem(int position){
+    public MovieData.movie getItem(int position){
         return list.get(position);
     }
 
@@ -59,7 +58,7 @@ public class MovieThumbnailAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup Parent){
         View out;
-        HashMap<String, String> data = getItem(position);
+        MovieData.movie data = getItem(position);
         if(convertView == null) {
             out = layFlater.inflate(R.layout.movie_item_list_view, null, false);
         }else{
@@ -67,14 +66,10 @@ public class MovieThumbnailAdapter extends BaseAdapter{
         }
         TextView title = (TextView) out.findViewById(R.id.movieItemTitle);
         ImageView image = (ImageView) out.findViewById(R.id.movieItemImage);
-        if (data.get("title") != null) {
-            title.setText(data.get("title"));
-        } else {
-            title.setText("Untitled - Entry");
-        }
-        if (data.get("src") != null) {
-            pLoader.load(data.get("src")).into(image);
-        }
+
+        title.setText(data.getOriginal_title());
+        pLoader.load(data.getPoster_path()).into(image);
+
         return out;
     }
 }
