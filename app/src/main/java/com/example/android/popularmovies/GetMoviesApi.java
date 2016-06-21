@@ -10,7 +10,8 @@ import retrofit.http.Query;
 public interface GetMoviesApi {
     enum SortOrder{
         POPULAR,
-        RATINGS
+        RATINGS,
+        FAVORITES
     }
     String Popular = "popularity.desc";
     String Ratings = "vote_average.desc";

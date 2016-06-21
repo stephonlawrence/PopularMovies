@@ -2,17 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/fragment_container">
 
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="100dp"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:gravity="center"
-        android:stretchMode="columnWidth"
-        android:numColumns="auto_fit"
-        android:id="@+id/GridView" />
+
 
 </LinearLayout>

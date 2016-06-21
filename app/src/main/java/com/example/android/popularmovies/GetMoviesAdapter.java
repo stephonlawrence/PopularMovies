@@ -1,7 +1,10 @@
 package com.example.android.popularmovies;
 
+import android.content.Context;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.client.Response;
 
 /**
  * Created by stephon on 2/29/16.
@@ -10,9 +13,11 @@ public class GetMoviesAdapter {
     protected RestAdapter rAdapter;
     protected GetMoviesApi mApi;
     static final String MOVIEDB_URL = "http://api.themoviedb.org";
-    static final String API_Key = "e2de2d779eeeff96aaa73256b6a6fcbd";
+    static final String API_Key = "";
+    private Context c;
 
-    public GetMoviesAdapter(){
+    public GetMoviesAdapter(Context x){
+        c = x;
         rAdapter = new RestAdapter.Builder()
             .setLogLevel(RestAdapter.LogLevel.FULL)
             .setEndpoint(MOVIEDB_URL)
@@ -21,17 +26,20 @@ public class GetMoviesAdapter {
     }
 
     public void getMovies(GetMoviesApi.SortOrder sortOrder, Callback<MovieData> cb){
-        String order;
         switch(sortOrder){
             case POPULAR:
-                order = GetMoviesApi.Popular;
+                mApi.getMovieData(API_Key, GetMoviesApi.Popular, cb);
                 break;
             case RATINGS:
-                order = GetMoviesApi.Ratings;
+                mApi.getMovieData(API_Key, GetMoviesApi.Ratings, cb);
+                break;
+            case FAVORITES:
+                Favorites.loadMovies(c);
                 break;
             default:
-                order = GetMoviesApi.Popular;
+                mApi.getMovieData(API_Key, GetMoviesApi.Popular, cb);
         }
-        mApi.getMovieData(API_Key, order, cb);
+
+
     }
 }

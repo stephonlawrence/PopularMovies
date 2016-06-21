@@ -1,8 +1,9 @@
 package com.example.android.popularmovies;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,34 +16,44 @@ import java.util.ArrayList;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import android.support.v4.app.FragmentActivity;
 
 public class MainActivity extends AppCompatActivity {
-    GetMoviesAdapter mAdapter = new GetMoviesAdapter();
+    GetMoviesAdapter mAdapter;
     MovieThumbnailAdapter thumbs;
     GridView grid;
-    public static MovieData.movie current;
+    static MovieData.movie current;
+    GetMoviesApi.SortOrder state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        thumbs = new MovieThumbnailAdapter(MainActivity.this, new ArrayList<MovieData.movie>());
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        ListFragment list = new ListFragment();
+        trans.add(R.id.fragment_container, list)
+        .commit();
 
-        grid = (GridView) findViewById(R.id.GridView);
-        grid.setAdapter(thumbs);
-        final MainActivity self = this;
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(self, DetailsActivity.class);
-                MainActivity.current = thumbs.list.get(position);
-                startActivity(intent);
-            }
-        });
-
-        refresh();
+//        mAdapter = new GetMoviesAdapter(getApplicationContext());
+//
+//        thumbs = new MovieThumbnailAdapter(MainActivity.this, new ArrayList<MovieData.movie>());
+//
+//        grid = (GridView) findViewById(R.id.GridView);
+//        grid.setAdapter(thumbs);
+//        final MainActivity self = this;
+//        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                //Intent intent = new Intent(self, DetailsFragment.class);
+//                MainActivity.current = thumbs.list.get(position);
+//
+//                //startActivity(intent);
+//            }
+//        });
+//
+//        refresh();
 
         /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -52,34 +63,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /* ***** Get Movie Data ***** */
-    public void refresh(){
-        // should be changed to refresh current sort order and not the default
-        mAdapter.getMovies(GetMoviesApi.SortOrder.POPULAR, movieDataCallback);
-    }
-    public void refresh(GetMoviesApi.SortOrder order){
-        mAdapter.getMovies(order, movieDataCallback);
-    }
-
-
-
-    private Callback<MovieData> movieDataCallback= new Callback<MovieData>(){
-
-        @Override
-        public void success(MovieData data, Response resp){
-            //should probably be in a separate method because the list can be changed locally too.
-            thumbs.list.clear();
-            thumbs.list.addAll(data.getResults());
-            thumbs.notifyDataSetChanged();
-            Log.v("MAIN -------- Success", "added all data to thumbs list.");
-        }
-
-        @Override
-    public void failure(RetrofitError error){
-            //should load a error loading text field instead of the grid
-            Log.v("MAIN -------- Failure", "Something went wrong! - "+error);
-        }
-    };
+//    @Override
+//    protected void onRestart(){
+//        super.onRestart();
+//        refresh(state);
+//    }
+//
+//    /* ***** Get Movie Data ***** */
+//    public void refresh(){
+//        // should be changed to refresh current sort order and not the default
+//        mAdapter.getMovies(GetMoviesApi.SortOrder.POPULAR, movieDataCallback);
+//        state = GetMoviesApi.SortOrder.POPULAR;
+//    }
+//    public void refresh(GetMoviesApi.SortOrder order){
+//        if(order == GetMoviesApi.SortOrder.FAVORITES){
+//            Favorites.loadMovies(getApplicationContext());
+//            replace(Favorites.f);
+//            state = GetMoviesApi.SortOrder.FAVORITES;
+//        }else {
+//            mAdapter.getMovies(order, movieDataCallback);
+//            state = order;
+//        }
+//    }
+//
+//    public void replace(MovieData mlist){
+//        thumbs.list.clear();
+//        thumbs.list.addAll(mlist.getResults());
+//        thumbs.notifyDataSetChanged();
+//    }
+//
+//    public void replace(Favorites.Faves mlist){
+//        thumbs.list.clear();
+//        thumbs.list.addAll(mlist.getResults());
+//        thumbs.notifyDataSetChanged();
+//    }
+//
+//    private Callback<MovieData> movieDataCallback= new Callback<MovieData>(){
+//
+//        @Override
+//        public void success(MovieData data, Response resp){
+//
+//            replace(data);
+//            Log.v("MAIN -------- Success", "added all data to thumbs list.");
+//        }
+//
+//        @Override
+//        public void failure(RetrofitError error){
+//            //should load a error loading text field instead of the grid
+//            Log.v("MAIN -------- Failure", "Something went wrong! - "+error);
+//        }
+//    };
 
     /* ****************************************** ********************************** */
 
@@ -102,13 +135,16 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch(id){
             case R.id.action_popular:
-                refresh(GetMoviesApi.SortOrder.POPULAR);
+                //refresh(GetMoviesApi.SortOrder.POPULAR);
                 break;
             case R.id.action_ratings:
-                refresh(GetMoviesApi.SortOrder.RATINGS);
+                //refresh(GetMoviesApi.SortOrder.RATINGS);
+                break;
+            case R.id.action_favorites:
+                //refresh(GetMoviesApi.SortOrder.FAVORITES);
                 break;
             default:
-                refresh();
+                //refresh();
         }
 
         return super.onOptionsItemSelected(item);
